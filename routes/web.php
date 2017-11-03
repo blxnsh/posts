@@ -15,6 +15,8 @@ Route::get('/', 'PostsController@index');
 
 Route::get('/api/getPosts', 'PostsController@getPosts');
 Route::get('/api/getOnePost', 'PostsController@getOnePost');
+Route::get('/api/getComments', 'PostsController@getComments');
 Route::post('/api/createPost', 'PostsController@createPost');
+Route::post('/api/createComment', 'PostsController@createComment');
 Route::put('/api/updatePost', 'PostsController@updatePost');
 Route::delete('/api/deletePost', 'PostsController@deletePost');

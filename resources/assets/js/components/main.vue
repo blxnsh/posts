@@ -1,8 +1,8 @@
 <template>
   <div class="container">
+    <hr>
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-              <hr>
               <!-- Open/Close Post form -->
               <p>
                 <button class="btn btn-primary" @click="showForm > 0? showForm = 0: showForm = 1">
@@ -20,6 +20,7 @@
 
             </div>
         </div>
+    <hr>
   </div>
 </template>
 

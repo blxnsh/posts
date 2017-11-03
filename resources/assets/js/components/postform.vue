@@ -9,9 +9,10 @@
             </div>
             <div>
               <label for="body">Введите текст</label>
-              <textarea class="form-control" rows="2" id="body"
+              <quill-editor
+              class="wysiwyg"
               v-model="post.body"
-              placeholder="А текст сюда :)" required></textarea>
+              ></quill-editor>
             </div>
         </div>
           <button class="btn btn-primary" type="submit">Запостить</button>
@@ -21,6 +22,8 @@
 </template>
 
 <script>
+import { quillEditor } from 'vue-quill-editor';
+
 export default {
   props:['postForm'],
   data(){
@@ -41,4 +44,7 @@ export default {
 </script>
 
 <style lang="css">
+.ql-container{
+  min-height:20rem;
+}
 </style>

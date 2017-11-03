@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Validation;
 use App\Comments;
 use App\Posts;
 use Illuminate\Http\Request;
@@ -29,26 +28,48 @@ class PostsController extends Controller
         return $post;
      }
 
+    public function getComments(Request $request)
+     {
+        $comments = Posts::find($request->id)->comments()->get();
+
+        return $comments;
+     }
+
      public function createPost(Request $request)
       {
-        $validator =  new Validation($request);
+        $this->validate($request,  ['title' => 'required',
+                                   'body' => 'required']);
 
-        if(!$validator->commentFails()){
-          $post = Posts::create(['title' => $request->title,
+         $post = Posts::create(['title' => $request->title,
                                  'body' => $request->body]);
-          return $post;
-        }
+        return $post;
+      }
+
+     public function createComment(Request $request)
+      {
+        $this->validate($request,  ['posts_id' => 'required',
+           'name' => 'required',
+           'email' => 'required',
+           'body' => 'required'
+           ]);
+
+        $comment = Comments::create(['posts_id' => $request->posts_id,
+                                 'name' => $request->name,
+                                 'email' => $request->email,
+                                 'body' => $request->body
+                               ]);
+          return $comment;
+
       }
 
       public function updatePost(Request $request)
        {
-         $validator =  new Validation($request);
+         $this->validate($request,  ['title' => 'required',
+                                    'body' => 'required']);
 
-         if(!$validator->commentFails()){
           Posts::find($request->id)->update(['title' => $request->title,
                                  'body' => $request->body]);
           return Posts::find($request->id);
-         }
        }
 
        public function deletePost(Request $request)

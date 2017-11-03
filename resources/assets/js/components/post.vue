@@ -25,7 +25,11 @@ export default {
  },
  computed:{
    shortenBody(){
-     return this.post.body.substring(0,299) + '...  ' + '<a href="#/post/' + this.post.id + '">Прочитать полностью</a>';
+    if(this.post.body.length < 300){
+      return this.post.body + '<a href="#/post/' + this.post.id + '">Прочитать полностью</a>';  
+    } else {
+      return this.post.body.substring(0,299) + '...  ' + '<a href="#/post/' + this.post.id + '">Прочитать полностью</a>';
+    }
    }
  },
  methods: {
