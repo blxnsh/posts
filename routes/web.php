@@ -11,6 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PostsController@index');
+
+Route::get('/api/getPosts', 'PostsController@getPosts');
+Route::post('/api/createPost', 'PostsController@createPost');
