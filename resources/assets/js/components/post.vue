@@ -1,5 +1,5 @@
 <template lang="html">
-  <!-- Single Post component -->
+  <!-- post for list component -->
   <div>
     <div class="panel panel-default">
       <div class="panel-heading">{{post.title}}</div>
@@ -21,12 +21,11 @@ export default {
   },
   props:['post'],
  mounted() {
-   console.log('post loaded');
-   console.log(this.post.id);
+   console.log('post loaded ' + this.post.title);
  },
  computed:{
    shortenBody(){
-     return this.post.body.substring(0,299) + '...  ' + '<a href="/post/' + this.post.id + '">Прочитать полностью</a>';
+     return this.post.body.substring(0,299) + '...  ' + '<a href="#/post/' + this.post.id + '">Прочитать полностью</a>';
    }
  },
  methods: {

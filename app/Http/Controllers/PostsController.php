@@ -22,6 +22,13 @@ class PostsController extends Controller
         return $posts;
      }
 
+    public function getOnePost(Request $request)
+     {
+        $post = Posts::find($request->id);
+
+        return $post;
+     }
+
      public function createPost(Request $request)
       {
         $validator =  new Validation($request);
