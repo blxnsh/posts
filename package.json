@@ -15,5 +15,8 @@
         "cross-env": "^5.1",
         "laravel-mix": "^1.0",
         "vue": "^2.1.10"
+    },
+    "dependencies": {
+        "vue-wysiwyg": "^1.2.7"
     }
 }
