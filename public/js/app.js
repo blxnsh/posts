@@ -14468,6 +14468,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
   components: {
@@ -14476,10 +14484,12 @@ exports.default = {
   },
   data: function data() {
     return {
+      showForm: 0,
       posts: [],
       post: {
         title: '',
-        body: ''
+        body: '',
+        id: ''
       }
     };
   },
@@ -14495,9 +14505,36 @@ exports.default = {
     addPost: function addPost(post) {
       var _this2 = this;
 
-      post.post('/api/createPost').then(function (response) {
-        return _this2.posts.unshift(response);
-      });
+      if (post.id == '') {
+        post.post('/api/createPost').then(function (response) {
+          return _this2.posts.unshift(response);
+        });
+      } else {
+        post.put('/api/updatePost').then(function (response) {
+          _this2.posts[_this2.posts.findIndex(function (i) {
+            return i.id == response.id;
+          })].title = response.title;
+          _this2.posts[_this2.posts.findIndex(function (i) {
+            return i.id == response.id;
+          })].body = response.body;
+        });
+      }
+      this.showForm = 0;
+      this.post = {
+        title: '',
+        body: '',
+        id: ''
+      };
+    },
+    updatePost: function updatePost(value) {
+      this.showForm = 0;
+      this.showForm = 1;
+      this.post = value;
+    },
+    deletePost: function deletePost(post) {
+      axios.delete('/api/deletePost', { params: { id: post.id } }).then(this.posts.splice(this.posts.findIndex(function (i) {
+        return i.id == post.id;
+      }), 1));
     }
   }
 
@@ -14511,26 +14548,53 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
-    _c("hr"),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "col-md-8 col-md-offset-2" },
-      [
-        _c("postform", {
-          attrs: { postForm: _vm.post },
-          on: { doAddPost: _vm.addPost }
-        }),
-        _vm._v(" "),
-        _vm._l(_vm.posts, function(post, index) {
-          return _c("post", { key: index, attrs: { post: post } })
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("hr")
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c(
+        "div",
+        { staticClass: "col-md-8 col-md-offset-2" },
+        [
+          _c("hr"),
+          _vm._v(" "),
+          _c("p", [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                on: {
+                  click: function($event) {
+                    _vm.showForm > 0 ? (_vm.showForm = 0) : (_vm.showForm = 1)
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.showForm > 0 ? "Скрыть" : "Добавить пост") +
+                    "\n              "
+                )
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _vm.showForm
+            ? _c("postform", {
+                attrs: { postForm: _vm.post },
+                on: { doAddPost: _vm.addPost }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.posts, function(post, index) {
+            return _c("post", {
+              key: index,
+              attrs: { post: post },
+              on: { updatePost: _vm.updatePost, deletePost: _vm.deletePost }
+            })
+          })
+        ],
+        2
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -15923,7 +15987,7 @@ exports = module.exports = __webpack_require__(44)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -16201,6 +16265,11 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
 
 exports.default = {
   data: function data() {
@@ -16210,6 +16279,21 @@ exports.default = {
   props: ['post'],
   mounted: function mounted() {
     console.log('post loaded');
+    console.log(this.post.id);
+  },
+
+  computed: {
+    shortenBody: function shortenBody() {
+      return this.post.body.substring(0, 299) + '...  ' + '<a href="/post/' + this.post.id + '">Прочитать полностью</a>';
+    }
+  },
+  methods: {
+    updatePost: function updatePost() {
+      this.$emit('updatePost', this.post);
+    },
+    deletePost: function deletePost() {
+      this.$emit('deletePost', this.post);
+    }
   }
 };
 
@@ -16227,7 +16311,30 @@ var render = function() {
         _vm._v(_vm._s(_vm.post.title))
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "panel-body" }, [_vm._v(_vm._s(_vm.post.body))])
+      _c("div", {
+        staticClass: "panel-body",
+        domProps: { innerHTML: _vm._s(_vm.shortenBody) }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "text-right" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-sm",
+            on: { click: _vm.updatePost }
+          },
+          [_vm._v("Редактировать")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-danger btn-sm",
+            on: { click: _vm.deletePost }
+          },
+          [_vm._v("Удалить")]
+        )
+      ])
     ])
   ])
 }
@@ -16328,7 +16435,7 @@ exports = module.exports = __webpack_require__(44)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -16364,6 +16471,7 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
 
 exports.default = {
   props: ['postForm'],
@@ -16371,7 +16479,8 @@ exports.default = {
     return {
       post: new Crud({
         title: this.postForm.title,
-        body: this.postForm.body
+        body: this.postForm.body,
+        id: this.postForm.id
       })
     };
   },

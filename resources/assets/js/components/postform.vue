@@ -1,4 +1,5 @@
 <template lang="html">
+  <!-- Post form compoent -->
     <div>
       <form @submit.prevent="addPost">
         <div class="form-group">
@@ -26,7 +27,8 @@ export default {
     return {
       post: new Crud({
         title: this.postForm.title,
-        body: this.postForm.body
+        body: this.postForm.body,
+        id: this.postForm.id
       })
     };
   },

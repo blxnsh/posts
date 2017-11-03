@@ -31,6 +31,23 @@ class PostsController extends Controller
                                  'body' => $request->body]);
           return $post;
         }
-
       }
+
+      public function updatePost(Request $request)
+       {
+         $validator =  new Validation($request);
+
+         if(!$validator->commentFails()){
+          Posts::find($request->id)->update(['title' => $request->title,
+                                 'body' => $request->body]);
+          return Posts::find($request->id);
+         }
+       }
+
+       public function deletePost(Request $request)
+        {
+          Posts::find($request->id)->delete();
+          return 'true';
+        }
+
 }
