@@ -17,7 +17,6 @@
                   @updatePost="updatePost"
                   @deletePost="deletePost"
                   ></post>
-
             </div>
         </div>
     <hr>

@@ -22,7 +22,6 @@
         "vue-router": "^3.0.1"
     },
     "dependencies": {
-        "sweetalert": "^2.0.8",
         "vue-quill-editor": "^2.3.3"
     },
     "babel": {
